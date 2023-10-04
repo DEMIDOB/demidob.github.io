@@ -83,3 +83,13 @@ li {
     font-weight: bold;
     color: white;
 }
+
+@media(max-width: 768px) {
+    #games-list {
+        display: block;
+    }
+
+    .game-teaser {
+        margin-bottom: 16px;
+    }
+}
