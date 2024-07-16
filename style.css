@@ -24,15 +24,19 @@ body {
     /* background-color: white; */
     /* background-color: var(--main-text-color); */
     /* margin: 0 0 16px 0; */
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
 
-    border-bottom: gray solid;
+    /* border-bottom: gray solid; */
+    border-bottom: whitesmoke solid;
 
     margin-top: 16px;
     margin-left: 64px;
     margin-right: 64px;
     padding-top: 16px;
     padding-left: 0;
-    color: grey;
+    /* color: grey; */
 }
 
 #main h1 {
@@ -48,6 +52,11 @@ body {
     /* border: var(--main-text-color) dashed; */
 
     /* background-color: white; */
+}
+
+nav a {
+    color: whitesmoke;
+    margin-right: 1em;
 }
 
 section {
@@ -68,6 +77,38 @@ a {
     color: var(--main-text-color);
     text-decoration: none;
 }
+
+.note {
+    /* width: 105vw; */
+    margin: 1em;
+    transform: rotate(-1.5deg);
+    background-color: gray;
+
+    color: white!important;
+
+    -webkit-box-shadow: 0px 0px 27px -1px #FFFFFF;
+    box-shadow: 0px 0px 27px -1px #FFFFFF;
+
+    transition: .3s;
+}
+
+.note-inner {
+    transform: rotate(1.5deg);
+
+    transition: .3s;
+}
+
+/* .note:hover {
+    transform: rotate(0);
+
+    transition: .3s;
+}
+
+.note-inner:hover {
+    transform: rotate(0);
+
+    transition: .3s;
+} */
 
 #games-list {
     display: flex;
