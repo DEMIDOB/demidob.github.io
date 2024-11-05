@@ -1,6 +1,7 @@
 :root {
     /* --main-text-color: rgb(0, 0, 0, 0.8); */
     --main-text-color: gray;
+    --main-bg-color: whitesmoke;
 }
 
 body, h1, h2, h3, h4, p {
@@ -15,7 +16,7 @@ body {
   /* font-weight: 600; */
   font-style: normal;
     font-size: 20px;
-    background-color: whitesmoke;
+    background-color: var(--main-bg-color);
     color: var(--main-text-color);
 }
 
@@ -27,8 +28,8 @@ body {
     margin-top: 3em;
     margin-bottom: 3em;
 
-    border-top: gray solid 2px;
-    border-left: gray solid 2px;
+    /* border-top: gray solid 2px; */
+    /* border-left: gray solid 2px; */
 }
 
 #main header {
@@ -41,7 +42,7 @@ body {
     justify-content: space-between;
     align-items: baseline;
     border-bottom: gray dotted;
-    /* border-bottom: whitesmoke solid; */
+    /* border-bottom: var(--main-bg-color) solid; */
 
 
     /* margin-top: 16px; */
@@ -81,6 +82,7 @@ nav a {
 section {
     margin-bottom: 1em;
     margin-left: 48px;
+    margin-right: 48px;
     padding-right: 48px;
 }
 
@@ -88,6 +90,10 @@ section {
     /* margin-left: 48px;
     margin-right: 48px; */
     margin-top: 2em;
+}
+
+.secondary>ul {
+    margin-top: 16px;
 }
 
 li {
@@ -124,8 +130,11 @@ a {
     border-top: gray dotted 2px;
     border-right: rgba(0, 0, 0, 0) dotted 2px;
     border-left: rgba(0, 0, 0, 0) dotted 2px;
-    border: rgba(0, 0, 0, 0) dotted 2px;
+    border: gray dotted 2px;
+    /* border: rgba(0, 0, 0, 0) dotted 2px; */
     /* border: none; */
+
+    background-color: var(--main-bg-color);
 
     transition: .3s;
 }
@@ -135,6 +144,7 @@ a {
     border-right: gray dotted 2px;
     border-left: gray dotted 2px; */
     border: gray dotted 2px;
+    background-color: white;
 
     transition: .3s;
 }
@@ -155,7 +165,6 @@ a {
     display: flex;
     justify-content: space-between;
     gap: 16px;
-    margin-top: 16px;
 }
 
 .game-teaser {
@@ -185,7 +194,7 @@ li {
     margin-bottom: 8px;
 
     border-bottom: gray solid;
-    /* background-color: whitesmoke; */
+    /* background-color: var(--main-bg-color); */
     /* padding: 16px; */
 
     font-size: 1.3em;
