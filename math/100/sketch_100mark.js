@@ -4,12 +4,16 @@ let radius = 20;
 
 let selectedPoint = -1;
 
-let pointsCount = 3;
-let s = 1;
+let pointsCount = 4;
+let s = 2;
 
 let isEvolutionGoing = false;
 let bestSum = Infinity;
 let bestPoints;
+
+let heatMap;
+
+const heatMapScale = 10;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -22,6 +26,9 @@ function setup() {
   }
   
   points = new Array(pointsCount).fill().map(() => [random(-1, 1), random(-1, 1)]);
+
+  heatMap = createImage(int(width / heatMapScale), int(height / heatMapScale));
+  heatMap.loadPixels();
 }
 
 function windowResized() {
@@ -36,6 +43,11 @@ function setS() {
 
 function draw() {
   background(isEvolutionGoing ? color(255, 200, 200) : 255);
+  if (!isEvolutionGoing) {
+    heatMap.updatePixels();
+    image(heatMap, 0, 0, width, height);
+    clearImage(heatMap);
+  }
   translate(width / 2, height / 2);
 
   // draw axes
@@ -60,64 +72,58 @@ function draw() {
     let denSum = 0;
 
   if (!isEvolutionGoing) {
-    // move selected point
-    if (selectedPoint >= 0 && selectedPoint < pointsCount) {
+    // move selected point(s)
+    if (keyIsPressed && keyCode === 16) {
+      for (let i = 0; i < pointsCount; ++i) {
+        points[i][0] += (mouseX - pmouseX) / scale;
+        points[i][1] += (mouseY - pmouseY) / scale;
+      }
+    }
+    else if (selectedPoint >= 0 && selectedPoint < pointsCount) {
       points[selectedPoint][0] = (mouseX - width / 2) / scale;
       points[selectedPoint][1] = (mouseY - height / 2) / scale;
     }
 
     // calculate and draw the value
   
-    for (let i = 0; i < pointsCount; i++) {
-      let x_i = points[i][0];
-      let y_i = points[i][1];
-  
-      let r_i = dist(0, 0, x_i, y_i);
-  
-      for (let j = i + 1; j < pointsCount; j++) {
-        let x_j = points[j][0];
-        let y_j = points[j][1];
-  
-        let r_j = dist(0, 0, x_j, y_j);
-  
-        let d_ij = dist(x_i, y_i, x_j, y_j);
-  
-        sum += (pow(r_i, s) + pow(r_j, s)) / d_ij;
-      }
-  
-      denSum += pow(r_i, s - 1);
-    }
-
-    sum = sum / (pointsCount - 1) / denSum;
+    sum = F(points);
 
     // translate(-width / 2, -height / 2);
     // fill(0);
     // text(`${sum}, s = ${s}`, 20, radius * 1.5);
+
+    fill(0, 255, 0);
+    let ax = 0, ay = 0;
+    for (let i = 0; i < pointsCount; ++i) {
+      ax += points[i][0];
+      ay += points[i][1];
+    }
+    circle(ax / pointsCount * scale, ay / pointsCount * scale, 10);
+
+    let testPoints = JSON.parse(JSON.stringify(points));
+    let bestS = Infinity;
+    let bestPos = [0, 0];
+
+    for (let x = 0; x < width; x += heatMapScale) {
+      testPoints[0][0] = (x - width/2) / scale;
+      for (let y = 0; y < height; y += heatMapScale) {
+        testPoints[0][1] = (y - height/2) / scale;
+        let val = F(testPoints);
+        // console.log(val);
+        heatMap.set(x / heatMapScale, y / heatMapScale, (exp(val - 0.5) - 1) * 255);
+        if (val < bestS) {
+          bestS = val;
+          bestPos = JSON.parse(JSON.stringify(testPoints[0]));
+        }
+      }
+    }
+
+    points[0] = JSON.parse(JSON.stringify(bestPos));
   } else {
     points = bestPoints;
     let newPoints = new Array(pointsCount).fill().map(() => [random(-1, 1), random(-1, 1)]);
-    
-      for (let i = 0; i < pointsCount; i++) {
-        let x_i = newPoints[i][0];
-        let y_i = newPoints[i][1];
-    
-        let r_i = dist(0, 0, x_i, y_i);
-    
-        for (let j = i + 1; j < pointsCount; j++) {
-          let x_j = newPoints[j][0];
-          let y_j = newPoints[j][1];
-    
-          let r_j = dist(0, 0, x_j, y_j);
-    
-          let d_ij = dist(x_i, y_i, x_j, y_j);
-    
-          sum += (pow(r_i, s) + pow(r_j, s)) / d_ij;
-        }
-    
-        denSum += pow(r_i, s - 1);
-      }
 
-      sum = sum / (pointsCount - 1) / denSum;
+      sum = F(newPoints);
       if (sum < bestSum) {
         points = newPoints;
         bestSum = sum;
@@ -166,4 +172,41 @@ function selectPointIfNeeded() {
 
 function toggleEvolution() {
   isEvolutionGoing = !isEvolutionGoing;
+}
+
+function F(points) {
+  let pointsCount = points.length;
+  let sum = 0, denSum = 0;
+
+  for (let i = 0; i < pointsCount; i++) {
+    let x_i = points[i][0];
+    let y_i = points[i][1];
+
+    let r_i = dist(0, 0, x_i, y_i);
+
+    for (let j = i + 1; j < pointsCount; j++) {
+      let x_j = points[j][0];
+      let y_j = points[j][1];
+
+      let r_j = dist(0, 0, x_j, y_j);
+
+      let d_ij = dist(x_i, y_i, x_j, y_j);
+
+      sum += (pow(r_i, s) + pow(r_j, s)) / d_ij;
+    }
+
+    denSum += pow(r_i, s - 1);
+  }
+
+  sum = sum / (pointsCount - 1) / denSum;
+  return sum;
+}
+
+function clearImage(img) {
+  img.loadPixels();
+  for (let x = 0; x < img.width; x++) {
+    for (let y = 0; y < img.height; y++) {
+      img.set(x, y, 255);
+    }
+  }
 }
