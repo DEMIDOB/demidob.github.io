@@ -4,7 +4,7 @@ let radius = 20;
 
 let selectedPoint = -1;
 
-let pointsCount = 4;
+let pointsCount = 3;
 let s = 2;
 
 let isEvolutionGoing = false;
@@ -14,6 +14,9 @@ let bestPoints;
 let heatMap;
 
 const heatMapScale = 10;
+
+var ruleNormalizePoints = true;
+var ruleAutoPlaceZero = false;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -26,6 +29,10 @@ function setup() {
   }
   
   points = new Array(pointsCount).fill().map(() => [random(-1, 1), random(-1, 1)]);
+  points[1] = [1, 0];
+  if (ruleNormalizePoints) {
+    normalizeAllPoints();
+  }
 
   heatMap = createImage(int(width / heatMapScale), int(height / heatMapScale));
   heatMap.loadPixels();
@@ -82,6 +89,10 @@ function draw() {
     else if (selectedPoint >= 0 && selectedPoint < pointsCount) {
       points[selectedPoint][0] = (mouseX - width / 2) / scale;
       points[selectedPoint][1] = (mouseY - height / 2) / scale;
+
+      if (ruleNormalizePoints) {
+        normalizePoint(selectedPoint);
+      }
     }
 
     // calculate and draw the value
@@ -118,7 +129,22 @@ function draw() {
       }
     }
 
-    points[0] = JSON.parse(JSON.stringify(bestPos));
+    fill(0, 0, 255);
+    circle(bestPos[0] * scale, bestPos[1] * scale, 10);
+
+    if (ruleAutoPlaceZero) {
+      points[0] = JSON.parse(JSON.stringify(bestPos));
+    }
+
+    // let pr = 0;
+    // for (let i = 0; i < pointsCount; ++i) {
+    //   pr += pow(dist(0, 0, points[i][0], points[i][1]), s);
+    // }
+
+    // pr = pow(pr / (pointsCount), 1/s);
+
+    // fill(0, 0);
+    // circle(0, 0, pr * scale * 2);
   } else {
     points = bestPoints;
     let newPoints = new Array(pointsCount).fill().map(() => [random(-1, 1), random(-1, 1)]);
@@ -131,10 +157,11 @@ function draw() {
       }
   }
 
-  
+  translate(-width / 2, -height / 2);
+  fill(255);
+  rect(0, 0, width, 45);
   textAlign(LEFT, BASELINE);
   textSize(radius);
-  translate(-width / 2, -height / 2);
   fill(0);
   text(`${sum}, s = ${s}`, 20, radius * 1.5);
 }
@@ -208,5 +235,28 @@ function clearImage(img) {
     for (let y = 0; y < img.height; y++) {
       img.set(x, y, 255);
     }
+  }
+}
+
+function keyPressed() {
+  switch (keyCode) {
+    case 78:
+      ruleNormalizePoints = !ruleNormalizePoints;
+      break;
+    case 65:
+      normalizeAllPoints();
+      break;
+  }
+}
+
+function normalizePoint(idx) {
+  let d = dist(0, 0, points[idx][0], points[idx][1]);
+  points[idx][0] /= d;
+  points[idx][1] /= d;
+}
+
+function normalizeAllPoints() {
+  for (let i = 0; i < pointsCount; ++i) {
+    normalizePoint(i);
   }
 }
