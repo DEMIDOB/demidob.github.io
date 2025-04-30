@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+    background-color: #f0f7f2;
+    color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+
+  .card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    max-width: 700px;
+    text-align: left;
+    margin-top: 60px;
+  }
+
+  .card h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .card h2 {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+  }
+
+  .card p,
+  .card li {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #222;
+  }
+
+  .card ul {
+    padding-left: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .card a {
+    color: #007f6c;
+    text-decoration: none;
+  }
+
+  .card a:hover {
+    text-decoration: underline;
+  }
+
+  .app-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
