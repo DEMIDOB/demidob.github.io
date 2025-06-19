@@ -90,7 +90,7 @@ function draw() {
     else if (selectedPoint >= 0 && selectedPoint < pointsCount) {
       points[selectedPoint][0] = (mouseX - width / 2) / scale;
       points[selectedPoint][1] = (mouseY - height / 2) / scale;
-      if (selectedPoint == 0) {
+      if (selectedPoint == 1) {
         points[selectedPoint][1] = 0;
       }
       
@@ -153,7 +153,7 @@ function draw() {
   } else {
     points = bestPoints;
     let newPoints = new Array(pointsCount).fill().map(() => [random(-1, 1), random(-1, 1)]);
-      newPoints[0][1] = 0;
+      newPoints[1][1] = 0;
 
       sum = F(newPoints);
       if (sum < bestSum) {
