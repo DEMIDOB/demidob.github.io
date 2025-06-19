@@ -6,6 +6,7 @@ let selectedPoint = -1;
 
 let pointsCount = 3;
 let s = 2;
+let evolutionSteps = 0;
 
 let isEvolutionGoing = false;
 let bestSum = Infinity;
@@ -15,7 +16,7 @@ let heatMap;
 
 const heatMapScale = 10;
 
-var ruleNormalizePoints = true;
+var ruleNormalizePoints = false;
 var ruleAutoPlaceZero = false;
 
 function setup() {
@@ -89,6 +90,10 @@ function draw() {
     else if (selectedPoint >= 0 && selectedPoint < pointsCount) {
       points[selectedPoint][0] = (mouseX - width / 2) / scale;
       points[selectedPoint][1] = (mouseY - height / 2) / scale;
+      if (selectedPoint == 0) {
+        points[selectedPoint][1] = 0;
+      }
+      
 
       if (ruleNormalizePoints) {
         normalizePoint(selectedPoint);
@@ -148,6 +153,7 @@ function draw() {
   } else {
     points = bestPoints;
     let newPoints = new Array(pointsCount).fill().map(() => [random(-1, 1), random(-1, 1)]);
+      newPoints[0][1] = 0;
 
       sum = F(newPoints);
       if (sum < bestSum) {
@@ -155,6 +161,8 @@ function draw() {
         bestSum = sum;
         bestPoints = newPoints;
       }
+
+      evolutionSteps++;
   }
 
   translate(-width / 2, -height / 2);
@@ -163,7 +171,7 @@ function draw() {
   textAlign(LEFT, BASELINE);
   textSize(radius);
   fill(0);
-  text(`${sum}, s = ${s}`, 20, radius * 1.5);
+  text(`${sum}, s = ${s}, evolution steps = ${evolutionSteps}`, 20, radius * 1.5);
 }
 
 function mousePressed() {
